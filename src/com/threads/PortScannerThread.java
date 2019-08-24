@@ -1,9 +1,6 @@
 package com.threads;
 
 import java.util.concurrent.*;
-
-import com.util.ScannerException;
-
 import java.io.*;
 import java.net.*;
 

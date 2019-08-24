@@ -1,10 +1,16 @@
 package com.util;
 
-import java.util.regex.*;
-import java.util.*;
-import com.util.*;
-import java.util.concurrent.atomic.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.threads.ScannerException;
 
 public class ScanUtil {
 	private static Pattern pattern;
@@ -72,18 +78,22 @@ public class ScanUtil {
 		if (range.isBlank()) {
 			throw new ScannerException("Port Range Required");
 		}
+		if (range.contains(",")) {
+			String[] sp = range.split(",");
+			final Integer[] p = new Integer[sp.length];
+			for (int i = 0; i < p.length; i++) {
+				p[i] = Integer.parseInt(sp[i]);
+			}
+		}
 		if (!range.contains("-")) {
 			final int r = Integer.parseInt(range);
 			final List<Integer> li = new ArrayList<Integer>();
 			li.add(r);
 			return li;
 		}
-		if (range.contains(",")) {
 
-		}
 		final String[] port = range.split("-");
-		int from;
-		int to;
+		int from, to;
 		try {
 			from = Integer.parseInt(port[0]);
 			to = Integer.parseInt(port[1]);

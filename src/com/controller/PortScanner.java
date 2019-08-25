@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.pref.Preference;
 import com.threads.PortListener;
 import com.threads.PortScannerThread;
 import com.util.ScanUtil;
@@ -23,9 +24,9 @@ public class PortScanner {
 
 	public static synchronized void scan(final List<Integer> ports, final String ip, final PortListener listener) {
 		PortScanner.portlist.clear();
-		PortScanner.executor = ScanUtil.createExecutor(64, 70);
+		PortScanner.executor = ScanUtil.createExecutor(Preference.PORT_THREADS);
 		for (final int p : ports) {
-			final Callable<Integer[]> portcall = new PortScannerThread(ip, p);
+			final Callable<Integer[]> portcall = new PortScannerThread(ip, p, Preference.PORT_TIMEOUT);
 			final Future<Integer[]> f = PortScanner.executor.submit(portcall);
 			PortScanner.portlist.add(f);
 		}

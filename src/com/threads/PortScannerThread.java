@@ -5,12 +5,13 @@ import java.io.*;
 import java.net.*;
 
 public class PortScannerThread implements Callable<Integer[]> {
-	private final int TIMEOUT = 1000;
+	private int TIMEOUT; // Default should be 1000ms .
 	private String host;
 	private int port;
 	private Integer[] result;
 
-	public PortScannerThread(final String host, final int port) {
+	public PortScannerThread(final String host, final int port, final int timeout) {
+		this.TIMEOUT = timeout;
 		this.host = host;
 		this.port = port;
 	}
@@ -22,7 +23,7 @@ public class PortScannerThread implements Callable<Integer[]> {
 			final InetAddress address = InetAddress.getByName(this.host);
 			final Socket s = new Socket();
 			final SocketAddress socketAddress = new InetSocketAddress(address, this.port);
-			s.connect(socketAddress, 1000);
+			s.connect(socketAddress, TIMEOUT);
 			this.result[1] = 1;
 			s.close();
 			return this.result;

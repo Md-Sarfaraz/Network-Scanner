@@ -16,7 +16,8 @@ public class ScanUtil {
 	private static Pattern pattern;
 	private static Matcher matcher;
 
-	public static List<String> getIPList(final String from, final String to) throws ScannerException {
+	public static List<String> getIPList(final String from, final String to) 
+			throws ScannerException {
 		validateIP(from);
 		final List<String> iplist = new ArrayList<String>();
 		if (from.trim().isBlank() || to.trim().isBlank()) {
@@ -29,7 +30,6 @@ public class ScanUtil {
 			for (int i = t1[3]; i <= t2; ++i) {
 				iplist.add(String.valueOf(sn) + i);
 			}
-			System.out.println("Returning IP List");
 			return iplist;
 		}
 		throw new ScannerException("Invalid IP Address\nCheck Again ...");
@@ -106,8 +106,9 @@ public class ScanUtil {
 		return getPortList(from, to);
 	}
 
-	public static ThreadPoolExecutor createExecutor(final int core, final int max) {
-		final ThreadPoolExecutor executor = new ThreadPoolExecutor(core, max, 60L, TimeUnit.SECONDS,
+	// Copied From StackOverflow
+	public static ThreadPoolExecutor createExecutor(final int core) {
+		final ThreadPoolExecutor executor = new ThreadPoolExecutor(core, (core + 4), 60L, TimeUnit.SECONDS,
 				new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
 					final AtomicInteger threadNumber = new AtomicInteger(1);
 

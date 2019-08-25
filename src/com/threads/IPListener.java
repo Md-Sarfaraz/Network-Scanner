@@ -1,9 +1,9 @@
 package com.threads;
 
 public interface IPListener {
-	void onAlive(final String p0, final int p1);
+	void onAlive(final String host, final int progress);
 
-	void onSleep(final String p0, final int p1);
+	void onSleep(final String host, final int progress);
 
 	void isComplete(final boolean done);
 }

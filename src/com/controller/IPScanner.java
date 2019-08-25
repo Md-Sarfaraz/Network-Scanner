@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.pref.Preference;
 import com.threads.IPListener;
 import com.threads.IPScannerThread;
 import com.util.ScanUtil;
@@ -21,9 +22,9 @@ public class IPScanner {
 
 	public static void scan(final List<String> iplist, final IPListener listener) {
 		IPScanner.flist.clear();
-		IPScanner.executor = ScanUtil.createExecutor(8, 10);
+		IPScanner.executor = ScanUtil.createExecutor(Preference.IP_THREADS);
 		for (final String ip : iplist) {
-			final Callable<String[]> ipcall = new IPScannerThread(ip);
+			final Callable<String[]> ipcall = new IPScannerThread(ip, Preference.IP_TIMEOUT);
 			final Future<String[]> f = IPScanner.executor.submit(ipcall);
 			IPScanner.flist.add(f);
 		}
@@ -38,9 +39,8 @@ public class IPScanner {
 						} else {
 							listener.onSleep(IPScanner.flist.get(i).get()[0], i);
 						}
-					} catch (InterruptedException | ExecutionException ex2) {
-						final Exception e = ex2;
-						System.out.println(e.getMessage());
+					} catch (InterruptedException | ExecutionException ex) {
+						System.out.println(ex.getMessage());
 						Thread.currentThread().interrupt();
 						IPScanner.flist.clear();
 					}

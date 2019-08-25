@@ -1,32 +1,24 @@
 package com.view;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Color;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import java.awt.Color;
-import java.awt.SystemColor;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class Settings extends JDialog {
+
+	private static final long serialVersionUID = 1L;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-
-	}
 
 	/**
 	 * Create the dialog.

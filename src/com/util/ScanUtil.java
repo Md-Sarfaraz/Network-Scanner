@@ -16,8 +16,7 @@ public class ScanUtil {
 	private static Pattern pattern;
 	private static Matcher matcher;
 
-	public static List<String> getIPList(final String from, final String to) 
-			throws ScannerException {
+	public static List<String> getIPList(final String from, final String to) throws ScannerException {
 		validateIP(from);
 		final List<String> iplist = new ArrayList<String>();
 		if (from.trim().isBlank() || to.trim().isBlank()) {
@@ -77,15 +76,16 @@ public class ScanUtil {
 	public static List<Integer> getPortList(final String range) throws ScannerException {
 		if (range.isBlank()) {
 			throw new ScannerException("Port Range Required");
-		}
-		if (range.contains(",")) {
+		} else if (range.contains(",")) {
 			String[] sp = range.split(",");
 			final Integer[] p = new Integer[sp.length];
 			for (int i = 0; i < p.length; i++) {
-				p[i] = Integer.parseInt(sp[i]);
+				int port = Integer.parseInt(sp[i]);
+				if (port < 1 || port > 65535)
+					throw new ScannerException("Invalid Port Number");
+				p[i] = port;
 			}
-		}
-		if (!range.contains("-")) {
+		} else if (!range.contains("-")) {
 			final int r = Integer.parseInt(range);
 			final List<Integer> li = new ArrayList<Integer>();
 			li.add(r);

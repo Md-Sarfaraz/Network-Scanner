@@ -46,6 +46,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainView {
 
@@ -53,11 +55,11 @@ public class MainView {
 	private JTextField fromIP;
 	private JTextField toIP;
 	private JTextField specPort;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField targetIP;
+	private JTextField portrange;
 	private DefaultListModel<String> ipModel, portModel;
-	private JLabel lblPing, lblThreads;
-	private JLabel lblStatus;
+	private JLabel lblPingIP, lblThreadsIP;
+	private JLabel lblStatusIP;
 
 	/**
 	 * Launch the application.
@@ -111,8 +113,18 @@ public class MainView {
 		scrollPane.setBounds(6, 6, 358, 355);
 		ipPane.add(scrollPane);
 
-		JList ipList = new JList();
-		ipList.setVisibleRowCount(-1);
+		JList<String> ipList = new JList<String>();
+		ipList.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					System.out.println("mousePressed");
+					targetIP.setText(ipList.getSelectedValue());
+					tabbedPane.setSelectedIndex(1);
+				}
+			}
+		});
 		ipList.setValueIsAdjusting(true);
 		ipList.setToolTipText("Double Click to Scan Ports");
 		ipList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -181,12 +193,11 @@ public class MainView {
 				try {
 					controller.setIPRange(fromIP.getText(), toIP.getText());
 					ipProg.setMaximum(controller.getTotalhost());
-					lblStatus.setText("Scanning ...");
+					lblStatusIP.setText("Scanning ...");
 					controller.scanIP(new IPListener() {
 
 						@Override
 						public void onSleep(String host, int progress) {
-							// TODO Auto-generated method stub
 							ipProg.setValue(progress);
 						}
 
@@ -204,17 +215,15 @@ public class MainView {
 
 						@Override
 						public void isComplete(boolean done) {
-							// TODO Auto-generated method stub
 							btnScan.setEnabled(done);
 							if (done) {
 								ipProg.setValue(controller.getTotalhost());
-								lblStatus.setText("Scan Complete");
+								lblStatusIP.setText("Scan Complete");
 							}
 						}
 					});
 				} catch (ScannerException e1) {
 					btnScan.setEnabled(true);
-					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(btnScan, e1.getMessage());
 				}
 			}
@@ -233,7 +242,7 @@ public class MainView {
 					// TODO Auto-generated method stub
 					IPScanner.stop();
 					btnScan.setEnabled(true);
-					lblStatus.setText("Scan Stopped");
+					lblStatusIP.setText("Scan Stopped");
 				}
 			}
 		});
@@ -244,10 +253,10 @@ public class MainView {
 		lblStaus.setBounds(376, 324, 149, 37);
 		ipPane.add(lblStaus);
 
-		lblStatus = new JLabel("Waiting ...");
-		lblStatus.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 18));
-		lblStatus.setBounds(537, 324, 215, 37);
-		ipPane.add(lblStatus);
+		lblStatusIP = new JLabel("Waiting ...");
+		lblStatusIP.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 18));
+		lblStatusIP.setBounds(537, 324, 215, 37);
+		ipPane.add(lblStatusIP);
 
 		JCheckBox chckbxScanForSpecific = new JCheckBox("Scan for Specific Port Number");
 		chckbxScanForSpecific.addItemListener(new ItemListener() {
@@ -272,17 +281,17 @@ public class MainView {
 		lblNoOfThreads.setBounds(376, 255, 149, 37);
 		ipPane.add(lblNoOfThreads);
 
-		lblThreads = new JLabel();
-		lblThreads.setFont(new Font("SansSerif", Font.BOLD, 16));
-		lblThreads.setBounds(537, 255, 187, 37);
-		ipPane.add(lblThreads);
-		lblThreads.setText("Default ( " + Preference.IP_THREADS + " )");
+		lblThreadsIP = new JLabel();
+		lblThreadsIP.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblThreadsIP.setBounds(537, 255, 187, 37);
+		ipPane.add(lblThreadsIP);
+		lblThreadsIP.setText("Default ( " + Preference.IP_THREADS + " )");
 
-		lblPing = new JLabel();
-		lblPing.setFont(new Font("SansSerif", Font.BOLD, 16));
-		lblPing.setBounds(537, 208, 187, 37);
-		ipPane.add(lblPing);
-		lblPing.setText("Default (" + Preference.IP_TIMEOUT + ")");
+		lblPingIP = new JLabel();
+		lblPingIP.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblPingIP.setBounds(537, 208, 187, 37);
+		ipPane.add(lblPingIP);
+		lblPingIP.setText("Default (" + Preference.IP_TIMEOUT + ")");
 
 		specPort = new JTextField();
 		specPort.setEnabled(false);
@@ -309,10 +318,11 @@ public class MainView {
 		lblListOfOpen.setHorizontalAlignment(SwingConstants.CENTER);
 		scrollPane_1.setColumnHeaderView(lblListOfOpen);
 
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(472, 39, 252, 28);
-		portPane.add(textField_3);
+		targetIP = new JTextField();
+		targetIP.setFont(new Font("SansSerif", Font.BOLD, 18));
+		targetIP.setColumns(10);
+		targetIP.setBounds(472, 39, 131, 28);
+		portPane.add(targetIP);
 
 		JLabel lblTargetIp = new JLabel("Target IP :");
 		lblTargetIp.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -320,24 +330,32 @@ public class MainView {
 		lblTargetIp.setBounds(376, 39, 84, 28);
 		portPane.add(lblTargetIp);
 
-		textField_4 = new JTextField();
-		textField_4.setToolTipText("i.e. - 21  \r\r\nor   21,22,80,  \r\r\nor   1-65535\r\r\n");
-		textField_4.setColumns(10);
-		textField_4.setBounds(531, 79, 193, 28);
-		portPane.add(textField_4);
+		portrange = new JTextField();
+		portrange.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				ViewUtil.validInputPort(e);
+			}
+		});
+		portrange.setHorizontalAlignment(SwingConstants.CENTER);
+		portrange.setFont(new Font("SansSerif", Font.BOLD, 18));
+		portrange.setToolTipText("i.e. - 21  \r\r\nor   21,22,80,  \r\r\nor   1-65535\r\r\n");
+		portrange.setColumns(10);
+		portrange.setBounds(615, 39, 112, 28);
+		portPane.add(portrange);
 
-		JButton button = new JButton("Stop");
-		button.setBounds(619, 159, 105, 37);
-		portPane.add(button);
+		JButton btnStopPort = new JButton("Stop");
+		btnStopPort.setBounds(619, 159, 105, 37);
+		portPane.add(btnStopPort);
 
-		JButton button_1 = new JButton("Scan");
-		button_1.setBounds(459, 159, 105, 37);
-		portPane.add(button_1);
+		JButton btnScanPort = new JButton("Scan");
+		btnScanPort.setBounds(459, 159, 105, 37);
+		portPane.add(btnScanPort);
 
-		JLabel label_1 = new JLabel("Waiting ...");
-		label_1.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 18));
-		label_1.setBounds(537, 324, 215, 37);
-		portPane.add(label_1);
+		JLabel lblStatusPort = new JLabel("Waiting ...");
+		lblStatusPort.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 18));
+		lblStatusPort.setBounds(537, 324, 215, 37);
+		portPane.add(lblStatusPort);
 
 		JLabel label_2 = new JLabel("Staus :");
 		label_2.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -351,16 +369,10 @@ public class MainView {
 		progressBar_1.setBounds(6, 373, 746, 28);
 		portPane.add(progressBar_1);
 
-		JLabel lblPortRange = new JLabel("Port Range / No.  :");
-		lblPortRange.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblPortRange.setFont(new Font("SansSerif", Font.BOLD, 16));
-		lblPortRange.setBounds(376, 79, 143, 28);
-		portPane.add(lblPortRange);
-
-		JLabel lblDefault_2 = new JLabel("Default ( 16 )");
-		lblDefault_2.setFont(new Font("SansSerif", Font.BOLD, 16));
-		lblDefault_2.setBounds(537, 275, 187, 37);
-		portPane.add(lblDefault_2);
+		JLabel lblThreadsPort = new JLabel("Default ( 16 )");
+		lblThreadsPort.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblThreadsPort.setBounds(537, 275, 187, 37);
+		portPane.add(lblThreadsPort);
 
 		JLabel label_3 = new JLabel("No. of Threads :");
 		label_3.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -374,15 +386,15 @@ public class MainView {
 		label_4.setBounds(376, 228, 149, 37);
 		portPane.add(label_4);
 
-		JLabel label_5 = new JLabel("Default (1000 ms)");
-		label_5.setFont(new Font("SansSerif", Font.BOLD, 16));
-		label_5.setBounds(537, 228, 187, 37);
-		portPane.add(label_5);
+		JLabel lblPingPort = new JLabel("Default (1000 ms)");
+		lblPingPort.setFont(new Font("SansSerif", Font.BOLD, 16));
+		lblPingPort.setBounds(537, 228, 187, 37);
+		portPane.add(lblPingPort);
 
 		JLabel lblNewLabel_1 = new JLabel("Recommended Port Range is Below 1000 At a time");
 		lblNewLabel_1.setForeground(new Color(255, 140, 0));
 		lblNewLabel_1.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 14));
-		lblNewLabel_1.setBounds(376, 119, 348, 28);
+		lblNewLabel_1.setBounds(376, 79, 348, 28);
 		portPane.add(lblNewLabel_1);
 
 		JMenuBar menuBar = new JMenuBar();

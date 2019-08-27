@@ -31,6 +31,7 @@ import com.controller.IPScanner;
 import com.controller.ScanController;
 import com.pref.Preference;
 import com.threads.IPListener;
+import com.threads.PortListener;
 import com.threads.ScannerException;
 import com.util.ViewUtil;
 
@@ -60,6 +61,9 @@ public class MainView {
 	private DefaultListModel<String> ipModel, portModel;
 	private JLabel lblPingIP, lblThreadsIP;
 	private JLabel lblStatusIP;
+	private ScanController controller;
+	private JProgressBar portProg;
+	private JLabel lblStatusPort;
 
 	/**
 	 * Launch the application.
@@ -86,6 +90,7 @@ public class MainView {
 	 * Create the application.
 	 */
 	public MainView() {
+		controller = new ScanController();
 		ipModel = new DefaultListModel<String>();
 		portModel = new DefaultListModel<String>();
 		initialize();
@@ -187,7 +192,7 @@ public class MainView {
 
 			public void actionPerformed(ActionEvent e) {
 				btnScan.setEnabled(false);
-				ScanController controller = new ScanController();
+
 				ipModel.clear();
 				ipProg.setValue(0);
 				try {
@@ -349,10 +354,52 @@ public class MainView {
 		portPane.add(btnStopPort);
 
 		JButton btnScanPort = new JButton("Scan");
+		btnScanPort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnScanPort.setEnabled(false);
+				portModel.clear();
+				portProg.setValue(0);
+				try {
+					controller.setPortRange(targetIP.getText(), portrange.getText());
+					portProg.setMaximum(controller.getTotalPorts());
+					lblStatusPort.setText("Scanning ..");
+					controller.scanPort(new PortListener() {
+
+						@Override
+						public void onOpen(int port, int progress) {
+							portProg.setValue(progress + 1);
+							portModel.addElement(port + "");
+							try {
+								Thread.sleep(125L);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+
+						@Override
+						public void onClose(int port, int progress) {
+							portProg.setValue(progress + 1);
+						}
+
+						@Override
+						public void isComplete(boolean done) {
+							btnScanPort.setEnabled(done);
+							if (done) {
+								portProg.setValue(controller.getTotalPorts());
+								lblStatusIP.setText("Scan Complete");
+							}
+						}
+					});
+				} catch (ScannerException e1) {
+					btnScanPort.setEnabled(true);
+					JOptionPane.showMessageDialog(btnScan, e1.getMessage());
+				}
+			}
+		});
 		btnScanPort.setBounds(459, 159, 105, 37);
 		portPane.add(btnScanPort);
 
-		JLabel lblStatusPort = new JLabel("Waiting ...");
+		lblStatusPort = new JLabel("Waiting ...");
 		lblStatusPort.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 18));
 		lblStatusPort.setBounds(537, 324, 215, 37);
 		portPane.add(lblStatusPort);
@@ -363,11 +410,11 @@ public class MainView {
 		label_2.setBounds(376, 324, 149, 37);
 		portPane.add(label_2);
 
-		JProgressBar progressBar_1 = new JProgressBar();
-		progressBar_1.setToolTipText("Scan Progress");
-		progressBar_1.setStringPainted(true);
-		progressBar_1.setBounds(6, 373, 746, 28);
-		portPane.add(progressBar_1);
+		portProg = new JProgressBar();
+		portProg.setToolTipText("Scan Progress");
+		portProg.setStringPainted(true);
+		portProg.setBounds(6, 373, 746, 28);
+		portPane.add(portProg);
 
 		JLabel lblThreadsPort = new JLabel("Default ( 16 )");
 		lblThreadsPort.setFont(new Font("SansSerif", Font.BOLD, 16));

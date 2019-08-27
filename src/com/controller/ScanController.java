@@ -19,7 +19,7 @@ public class ScanController {
 		return this.totalhost;
 	}
 
-	public int getTotalPorts() throws ScannerException {
+	public int getTotalPorts() {
 		return this.totalports;
 	}
 

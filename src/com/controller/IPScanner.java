@@ -56,6 +56,10 @@ public class IPScanner {
 		System.out.println("All Request Completed");
 	}
 
+	public static void customScan(final List<String> iplist, final int port, final IPListener listener) {
+
+	}
+
 	public static void stop() {
 		System.out.println("Stopping");
 		for (final Future<String[]> f : IPScanner.flist) {

@@ -44,4 +44,8 @@ public class ScanController {
 		final List<Integer> ports = ScanUtil.getPortList(this.portRange);
 		PortScanner.scan(ports, this.IpOfPort, listener);
 	}
+
+	public void scanIpWithCustomPort(final IPListener listener) {
+
+	}
 }

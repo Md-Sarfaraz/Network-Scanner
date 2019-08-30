@@ -268,7 +268,6 @@ public class MainView {
 		JCheckBox chckbxScanForSpecific = new JCheckBox("Scan for Specific Port Number");
 		chckbxScanForSpecific.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-
 				specPort.setEnabled(e.getStateChange() == 1);
 			}
 		});

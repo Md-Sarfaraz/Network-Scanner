@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeListener;
 
 import com.controller.IPScanner;
+import com.controller.PortScanner;
 import com.controller.ScanController;
 import com.pref.Preference;
 import com.threads.IPListener;
@@ -64,6 +65,7 @@ public class MainView {
 	private ScanController controller;
 	private JProgressBar portProg;
 	private JLabel lblStatusPort;
+	private JButton btnScanPort;
 
 	/**
 	 * Launch the application.
@@ -350,10 +352,18 @@ public class MainView {
 		portPane.add(portrange);
 
 		JButton btnStopPort = new JButton("Stop");
+		btnStopPort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PortScanner.stop();
+				btnScanPort.setEnabled(true);
+				lblStatusPort.setText("Scan Stopped");
+
+			}
+		});
 		btnStopPort.setBounds(619, 159, 105, 37);
 		portPane.add(btnStopPort);
 
-		JButton btnScanPort = new JButton("Scan");
+		btnScanPort = new JButton("Scan");
 		btnScanPort.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnScanPort.setEnabled(false);

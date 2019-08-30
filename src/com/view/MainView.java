@@ -318,8 +318,9 @@ public class MainView {
 		scrollPane_1.setBounds(6, 6, 358, 355);
 		portPane.add(scrollPane_1);
 
-		JList list_1 = new JList();
-		scrollPane_1.setViewportView(list_1);
+		JList portList = new JList();
+		scrollPane_1.setViewportView(portList);
+		portList.setModel(portModel);
 
 		JLabel lblListOfOpen = new JLabel("List of Open Ports");
 		lblListOfOpen.setHorizontalAlignment(SwingConstants.CENTER);
@@ -378,7 +379,7 @@ public class MainView {
 						@Override
 						public void onOpen(int port, int progress) {
 							portProg.setValue(progress + 1);
-							portModel.addElement(port + "");
+							portModel.addElement(String.valueOf(port));
 							try {
 								Thread.sleep(125L);
 							} catch (InterruptedException e) {

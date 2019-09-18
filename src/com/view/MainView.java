@@ -30,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import com.controller.IPScanner;
 import com.controller.PortScanner;
 import com.controller.ScanController;
+import com.pref.Persist;
 import com.pref.Preference;
 import com.threads.IPListener;
 import com.threads.PortListener;
@@ -50,6 +51,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class MainView {
 
@@ -66,6 +68,7 @@ public class MainView {
 	private JProgressBar portProg;
 	private JLabel lblStatusPort;
 	private JButton btnScanPort;
+	private Preference pref = null;
 
 	/**
 	 * Launch the application.
@@ -92,9 +95,11 @@ public class MainView {
 	 * Create the application.
 	 */
 	public MainView() {
+
 		controller = new ScanController();
 		ipModel = new DefaultListModel<String>();
 		portModel = new DefaultListModel<String>();
+
 		initialize();
 	}
 
@@ -108,7 +113,12 @@ public class MainView {
 		frmNetworkScanner.setLocationRelativeTo(null);
 		frmNetworkScanner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNetworkScanner.getContentPane().setLayout(new BorderLayout(0, 0));
-
+		try {
+			pref = Persist.loadPreferences();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frmNetworkScanner.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -291,13 +301,13 @@ public class MainView {
 		lblThreadsIP.setFont(new Font("SansSerif", Font.BOLD, 16));
 		lblThreadsIP.setBounds(537, 255, 187, 37);
 		ipPane.add(lblThreadsIP);
-		lblThreadsIP.setText("Default ( " + Preference.IP_THREADS + " )");
+		lblThreadsIP.setText(pref.getIP_THREADS()+"");
 
 		lblPingIP = new JLabel();
 		lblPingIP.setFont(new Font("SansSerif", Font.BOLD, 16));
 		lblPingIP.setBounds(537, 208, 187, 37);
 		ipPane.add(lblPingIP);
-		lblPingIP.setText("Default (" + Preference.IP_TIMEOUT + ")");
+		lblPingIP.setText(pref.getIP_TIMEOUT()+"");
 
 		specPort = new JTextField();
 		specPort.setEnabled(false);
@@ -426,9 +436,10 @@ public class MainView {
 		portProg.setBounds(6, 373, 746, 28);
 		portPane.add(portProg);
 
-		JLabel lblThreadsPort = new JLabel("Default ( 16 )");
+		JLabel lblThreadsPort = new JLabel();
 		lblThreadsPort.setFont(new Font("SansSerif", Font.BOLD, 16));
 		lblThreadsPort.setBounds(537, 275, 187, 37);
+		lblThreadsPort.setText(pref.getPORT_THREADS()+"");
 		portPane.add(lblThreadsPort);
 
 		JLabel label_3 = new JLabel("No. of Threads :");
@@ -443,9 +454,10 @@ public class MainView {
 		label_4.setBounds(376, 228, 149, 37);
 		portPane.add(label_4);
 
-		JLabel lblPingPort = new JLabel("Default (1000 ms)");
+		JLabel lblPingPort = new JLabel();
 		lblPingPort.setFont(new Font("SansSerif", Font.BOLD, 16));
 		lblPingPort.setBounds(537, 228, 187, 37);
+		lblPingPort.setText(pref.getPORT_TIMEOUT()+"");
 		portPane.add(lblPingPort);
 
 		JLabel lblNewLabel_1 = new JLabel("Recommended Port Range is Below 1000 At a time");

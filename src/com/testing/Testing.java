@@ -4,12 +4,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.util.ScanUtil;
+import com.pref.Persist;
 
 public class Testing {
 	public static void main(String... strings) {
 		System.out.println(searchPort(443));
-		fieldcheck();
+		try {
+			System.out.println(Persist.loadPreferences());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static String searchPort(int port) {
@@ -26,10 +31,6 @@ public class Testing {
 			e.printStackTrace();
 		}
 		return "UNKNOWN";
-	}
-
-	public static void fieldcheck() {
-		System.out.println(ScanUtil.validateIP("192.13"));
 	}
 
 }

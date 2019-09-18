@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -7,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.pref.Persist;
 import com.pref.Preference;
 import com.threads.IPListener;
 import com.threads.IPScannerThread;
@@ -21,10 +23,16 @@ public class IPScanner {
 	}
 
 	public static void scan(final List<String> iplist, final IPListener listener) {
+		Preference pr = null;
+		try {
+			pr = Persist.loadPreferences();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		IPScanner.flist.clear();
-		IPScanner.executor = ScanUtil.createExecutor(Preference.IP_THREADS);
+		IPScanner.executor = ScanUtil.createExecutor(pr.IP_THREADS);
 		for (final String ip : iplist) {
-			final Callable<String[]> ipcall = new IPScannerThread(ip, Preference.IP_TIMEOUT);
+			final Callable<String[]> ipcall = new IPScannerThread(ip, pr.IP_TIMEOUT);
 			final Future<String[]> f = IPScanner.executor.submit(ipcall);
 			IPScanner.flist.add(f);
 		}

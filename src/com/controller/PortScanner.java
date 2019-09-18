@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.pref.Persist;
 import com.pref.Preference;
 import com.threads.PortListener;
 import com.threads.PortScannerThread;
@@ -20,13 +22,18 @@ public class PortScanner {
 
 	static {
 		PortScanner.portlist = new ArrayList<Future<Integer[]>>();
+
 	}
 
-	public static synchronized void scan(final List<Integer> ports, final String ip, final PortListener listener) {
+	public static void scan(final List<Integer> ports, final String ip, final PortListener listener) {Preference pr = null;try {
+			pr = Persist.loadPreferences();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		PortScanner.portlist.clear();
-		PortScanner.executor = ScanUtil.createExecutor(Preference.PORT_THREADS);
+		PortScanner.executor = ScanUtil.createExecutor(pr.getPORT_THREADS());
 		for (final int p : ports) {
-			final Callable<Integer[]> portcall = new PortScannerThread(ip, p, Preference.PORT_TIMEOUT);
+			final Callable<Integer[]> portcall = new PortScannerThread(ip, p, pr.getPORT_TIMEOUT());
 			final Future<Integer[]> f = PortScanner.executor.submit(portcall);
 			PortScanner.portlist.add(f);
 		}

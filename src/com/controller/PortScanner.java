@@ -25,7 +25,9 @@ public class PortScanner {
 
 	}
 
-	public static void scan(final List<Integer> ports, final String ip, final PortListener listener) {Preference pr = null;try {
+	public static void scan(final List<Integer> ports, final String ip, final PortListener listener) {
+		Preference pr = null;
+		try {
 			pr = Persist.loadPreferences();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -47,11 +49,13 @@ public class PortScanner {
 						} else {
 							listener.onClose(PortScanner.portlist.get(i).get()[0], i);
 						}
-					} catch (InterruptedException | CancellationException | ExecutionException ex) {
+					} catch (InterruptedException | ExecutionException ex) {
 						final Exception e = ex;
 						System.out.println(e.getMessage());
 						Thread.currentThread().interrupt();
 						PortScanner.portlist.clear();
+					} catch (CancellationException e) {
+						System.out.println(e.getMessage()+"\tCancellationException");
 					}
 					if (i == PortScanner.portlist.size() - 1) {
 						listener.isComplete(true);

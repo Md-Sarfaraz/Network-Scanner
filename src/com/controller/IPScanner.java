@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -51,6 +52,8 @@ public class IPScanner {
 						System.out.println(ex.getMessage());
 						Thread.currentThread().interrupt();
 						IPScanner.flist.clear();
+					} catch (CancellationException e) {
+						System.out.println(e.getMessage()+"\tCancellationException");
 					}
 					if (i == IPScanner.flist.size() - 1) {
 						listener.isComplete(true);

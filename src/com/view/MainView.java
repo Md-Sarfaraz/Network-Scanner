@@ -310,6 +310,11 @@ public class MainView {
 		lblPingIP.setText(pref.getIP_TIMEOUT()+"");
 
 		specPort = new JTextField();
+		specPort.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+		});
 		specPort.setEnabled(false);
 		specPort.setHorizontalAlignment(SwingConstants.CENTER);
 		specPort.setText("78-595");

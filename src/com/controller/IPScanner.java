@@ -41,25 +41,29 @@ public class IPScanner {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for (int i = 0; i < IPScanner.flist.size(); ++i) {
-					try {
+				try {
+					for (int i = 0; i < IPScanner.flist.size(); ++i) {
+
 						if (Boolean.parseBoolean(IPScanner.flist.get(i).get()[1])) {
 							listener.onAlive(IPScanner.flist.get(i).get()[0], i);
 						} else {
 							listener.onSleep(IPScanner.flist.get(i).get()[0], i);
 						}
-					} catch (InterruptedException | ExecutionException ex) {
-						System.out.println(ex.getMessage());
-						Thread.currentThread().interrupt();
-						IPScanner.flist.clear();
-					} catch (CancellationException e) {
-						System.out.println(e.getMessage()+"\tCancellationException");
-					}
-					if (i == IPScanner.flist.size() - 1) {
-						listener.isComplete(true);
-					} else {
-						listener.isComplete(false);
-					}
+
+						if (i == IPScanner.flist.size() - 1) {
+							listener.isComplete(true);
+						} else {
+							listener.isComplete(false);
+						}
+					} // fgfgfgf
+				} catch (InterruptedException | ExecutionException ex) {
+					System.out.println(ex.getMessage());
+
+				} catch (CancellationException e) {
+					System.out.println(e.getMessage() + "\tCancellationException");
+				} finally {
+					Thread.currentThread().interrupt();
+					IPScanner.flist.clear();
 				}
 			}
 		}).start();
@@ -72,7 +76,6 @@ public class IPScanner {
 	}
 
 	public static void stop() {
-		System.out.println("Stopping");
 		for (final Future<String[]> f : IPScanner.flist) {
 			f.cancel(false);
 		}

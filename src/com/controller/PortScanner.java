@@ -42,26 +42,28 @@ public class PortScanner {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for (int i = 0; i < PortScanner.portlist.size(); ++i) {
-					try {
+				try {
+					for (int i = 0; i < PortScanner.portlist.size(); ++i) {
+
 						if (PortScanner.portlist.get(i).get()[1] == 1) {
 							listener.onOpen(PortScanner.portlist.get(i).get()[0], i);
 						} else {
 							listener.onClose(PortScanner.portlist.get(i).get()[0], i);
 						}
-					} catch (InterruptedException | ExecutionException ex) {
-						final Exception e = ex;
-						System.out.println(e.getMessage());
-						Thread.currentThread().interrupt();
-						PortScanner.portlist.clear();
-					} catch (CancellationException e) {
-						System.out.println(e.getMessage()+"\tCancellationException");
+
+						if (i == PortScanner.portlist.size() - 1) {
+							listener.isComplete(true);
+						} else {
+							listener.isComplete(false);
+						}
 					}
-					if (i == PortScanner.portlist.size() - 1) {
-						listener.isComplete(true);
-					} else {
-						listener.isComplete(false);
-					}
+				} // test
+				catch (InterruptedException | ExecutionException ex) {
+					System.out.println(ex.getMessage());
+					Thread.currentThread().interrupt();
+					PortScanner.portlist.clear();
+				} catch (CancellationException e) {
+					System.out.println(e.getMessage() + "\tCancellationException");
 				}
 			}
 		}).start();
@@ -72,7 +74,6 @@ public class PortScanner {
 	public static void stop() {
 		try {
 			if (!PortScanner.portlist.isEmpty()) {
-				System.out.println("Stopping");
 				for (final Future<Integer[]> f : PortScanner.portlist) {
 					f.cancel(false);
 				}

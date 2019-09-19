@@ -313,6 +313,7 @@ public class MainView {
 		specPort.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
+				ViewUtil.validInputPort(e);
 			}
 		});
 		specPort.setEnabled(false);

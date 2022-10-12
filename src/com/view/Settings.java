@@ -11,14 +11,16 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Settings extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField ipThreadtxt;
+	private JTextField portThreadtxt;
+	private JTextField portTimetxt;
+	private JTextField ipTimetxt;
 
 	/**
 	 * Create the dialog.
@@ -34,7 +36,7 @@ public class Settings extends JDialog {
 			getContentPane().add(panel, BorderLayout.CENTER);
 			panel.setLayout(null);
 
-			JLabel lblSetThreadsFor = new JLabel("<  Set Threads For Scaning  >");
+			JLabel lblSetThreadsFor = new JLabel("<  Set Threads For Scanning  >");
 			lblSetThreadsFor.setFont(new Font("Tahoma", Font.PLAIN, 14));
 			lblSetThreadsFor.setHorizontalAlignment(SwingConstants.CENTER);
 			lblSetThreadsFor.setBounds(114, 75, 218, 32);
@@ -46,33 +48,33 @@ public class Settings extends JDialog {
 			lblSetTimeoutFor.setBounds(114, 167, 218, 32);
 			panel.add(lblSetTimeoutFor);
 
-			textField = new JTextField();
-			textField.setHorizontalAlignment(SwingConstants.CENTER);
-			textField.setFont(new Font("Tahoma", Font.BOLD, 14));
-			textField.setBounds(20, 79, 84, 32);
-			panel.add(textField);
-			textField.setColumns(10);
+			ipThreadtxt = new JTextField();
+			ipThreadtxt.setHorizontalAlignment(SwingConstants.CENTER);
+			ipThreadtxt.setFont(new Font("Tahoma", Font.BOLD, 14));
+			ipThreadtxt.setBounds(20, 79, 84, 32);
+			panel.add(ipThreadtxt);
+			ipThreadtxt.setColumns(10);
 
-			textField_1 = new JTextField();
-			textField_1.setHorizontalAlignment(SwingConstants.CENTER);
-			textField_1.setFont(new Font("Tahoma", Font.BOLD, 14));
-			textField_1.setColumns(10);
-			textField_1.setBounds(342, 75, 84, 32);
-			panel.add(textField_1);
+			portThreadtxt = new JTextField();
+			portThreadtxt.setHorizontalAlignment(SwingConstants.CENTER);
+			portThreadtxt.setFont(new Font("Tahoma", Font.BOLD, 14));
+			portThreadtxt.setColumns(10);
+			portThreadtxt.setBounds(342, 75, 84, 32);
+			panel.add(portThreadtxt);
 
-			textField_2 = new JTextField();
-			textField_2.setHorizontalAlignment(SwingConstants.CENTER);
-			textField_2.setFont(new Font("Tahoma", Font.BOLD, 14));
-			textField_2.setColumns(10);
-			textField_2.setBounds(342, 167, 84, 32);
-			panel.add(textField_2);
+			portTimetxt = new JTextField();
+			portTimetxt.setHorizontalAlignment(SwingConstants.CENTER);
+			portTimetxt.setFont(new Font("Tahoma", Font.BOLD, 14));
+			portTimetxt.setColumns(10);
+			portTimetxt.setBounds(342, 167, 84, 32);
+			panel.add(portTimetxt);
 
-			textField_3 = new JTextField();
-			textField_3.setHorizontalAlignment(SwingConstants.CENTER);
-			textField_3.setFont(new Font("Tahoma", Font.BOLD, 14));
-			textField_3.setColumns(10);
-			textField_3.setBounds(20, 167, 84, 32);
-			panel.add(textField_3);
+			ipTimetxt = new JTextField();
+			ipTimetxt.setHorizontalAlignment(SwingConstants.CENTER);
+			ipTimetxt.setFont(new Font("Tahoma", Font.BOLD, 14));
+			ipTimetxt.setColumns(10);
+			ipTimetxt.setBounds(20, 167, 84, 32);
+			panel.add(ipTimetxt);
 
 			JLabel lblIpScanSettings = new JLabel("IP Scan Settings");
 			lblIpScanSettings.setHorizontalAlignment(SwingConstants.CENTER);
@@ -87,12 +89,23 @@ public class Settings extends JDialog {
 			panel.add(lblPortScanSettings);
 
 			JButton btnSave = new JButton("Save");
+			btnSave.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// TODO
+
+				}
+			});
 			btnSave.setBackground(new Color(0, 128, 0));
 			btnSave.setForeground(new Color(255, 255, 255));
 			btnSave.setBounds(20, 275, 154, 32);
 			panel.add(btnSave);
 
 			JButton btnCancel = new JButton("Cancel");
+			btnCancel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
 			btnCancel.setForeground(new Color(255, 255, 255));
 			btnCancel.setBackground(new Color(139, 0, 0));
 			btnCancel.setBounds(280, 275, 146, 32);

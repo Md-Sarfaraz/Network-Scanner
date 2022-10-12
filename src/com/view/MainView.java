@@ -99,7 +99,6 @@ public class MainView {
 		controller = new ScanController();
 		ipModel = new DefaultListModel<String>();
 		portModel = new DefaultListModel<String>();
-
 		initialize();
 	}
 
@@ -111,6 +110,7 @@ public class MainView {
 		frmNetworkScanner.setTitle("Network Scanner");
 		frmNetworkScanner.setSize(774, 499);
 		frmNetworkScanner.setLocationRelativeTo(null);
+		frmNetworkScanner.setResizable(false);
 		frmNetworkScanner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNetworkScanner.getContentPane().setLayout(new BorderLayout(0, 0));
 		try {
@@ -320,7 +320,7 @@ public class MainView {
 		specPort.setHorizontalAlignment(SwingConstants.CENTER);
 		specPort.setText("78-595");
 		specPort.setFont(new Font("SansSerif", Font.BOLD, 16));
-		specPort.setToolTipText("i.e. - 21  \r\r\nor   21,22,80,  \r\r\nor   1-65535\r\r\n");
+		specPort.setToolTipText("ex - 21  or   21,22,80,  or   1-65535");
 		specPort.setBounds(592, 119, 132, 28);
 		ipPane.add(specPort);
 		specPort.setColumns(10);
@@ -388,6 +388,9 @@ public class MainView {
 				try {
 					controller.setPortRange(targetIP.getText(), portrange.getText());
 					portProg.setMaximum(controller.getTotalPorts());
+					portProg.setStringPainted(true);
+					
+					portProg.setBackground(Color.GREEN);
 					lblStatusPort.setText("Scanning ..");
 					controller.scanPort(new PortListener() {
 
@@ -412,7 +415,9 @@ public class MainView {
 							btnScanPort.setEnabled(done);
 							if (done) {
 								portProg.setValue(controller.getTotalPorts());
-								lblStatusIP.setText("Scan Complete");
+								lblStatusPort.setText("Scan Complete");
+								portProg.setForeground(Color.black);
+								portProg.setBackground(Color.GRAY);
 							}
 						}
 					});
